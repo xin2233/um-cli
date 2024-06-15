@@ -1,6 +1,8 @@
+input the following command:
 go env -w GO111MODULE=on
 go env -w GOPROXY=https://goproxy.cn,direct
 
-然后
+then,
 go env
-查看配置是否正确
+
+and check
