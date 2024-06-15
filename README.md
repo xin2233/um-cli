@@ -1,6 +1,6 @@
 # Unlock Music Project - CLI Edition
 
-Original: Web Edition https://github.com/ix64/unlock-music， DMAC
+Original: Web Edition https://github.com/ix64/unlock-music, DMAC
 
 - [Release Download](https://github.com/unlock-music/cli/releases/latest)
 
