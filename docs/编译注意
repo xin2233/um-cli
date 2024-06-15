@@ -1,0 +1,6 @@
+go env -w GO111MODULE=on
+go env -w GOPROXY=https://goproxy.cn,direct
+
+然后
+go env
+查看配置是否正确
