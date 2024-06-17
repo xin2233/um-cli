@@ -25,7 +25,7 @@ type Decoder struct {
 	audio []byte
 }
 
-func NewDecoder(file []byte) common.Decoder {
+func NewDecoder(file []byte) common.DecoderInterface {
 	return &Decoder{
 		file: file,
 	}
@@ -43,7 +43,7 @@ func (d Decoder) GetAudioExt() string {
 	return "" // use sniffer
 }
 
-func (d Decoder) GetMeta() common.Meta {
+func (d Decoder) GetMeta() common.MetaInterface {
 	return nil
 }
 

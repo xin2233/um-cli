@@ -45,11 +45,11 @@ func (d *Decoder) GetAudioExt() string {
 	return ""
 }
 
-func (d *Decoder) GetMeta() common.Meta {
+func (d *Decoder) GetMeta() common.MetaInterface {
 	return nil
 }
 
-func NewDecoder(data []byte) common.Decoder {
+func NewDecoder(data []byte) common.DecoderInterface {
 	return &Decoder{file: data}
 }
 
@@ -90,7 +90,7 @@ func (d *Decoder) Decode() error {
 }
 
 func DecoderFuncWithExt(ext string) common.NewDecoderFunc {
-	return func(file []byte) common.Decoder {
+	return func(file []byte) common.DecoderInterface {
 		return &Decoder{file: file, outputExt: ext}
 	}
 }

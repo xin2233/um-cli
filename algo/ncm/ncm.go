@@ -26,7 +26,7 @@ var (
 		0x5C, 0x5D, 0x26, 0x30, 0x55, 0x3C, 0x27, 0x28}
 )
 
-func NewDecoder(data []byte) common.Decoder {
+func NewDecoder(data []byte) common.DecoderInterface {
 	return &Decoder{
 		file:    data,
 		fileLen: uint32(len(data)),
@@ -240,7 +240,7 @@ func (d Decoder) GetCoverImage() []byte {
 	}
 }
 
-func (d Decoder) GetMeta() common.Meta {
+func (d Decoder) GetMeta() common.MetaInterface {
 	return d.meta
 }
 

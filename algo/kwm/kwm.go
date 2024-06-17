@@ -43,11 +43,11 @@ func (d *Decoder) GetAudioExt() string {
 	return "." + d.outputExt
 }
 
-func (d *Decoder) GetMeta() common.Meta {
+func (d *Decoder) GetMeta() common.MetaInterface {
 	return nil
 }
 
-func NewDecoder(data []byte) common.Decoder {
+func NewDecoder(data []byte) common.DecoderInterface {
 	//todo: Notice the input data will be changed for now
 	return &Decoder{file: data}
 }

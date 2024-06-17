@@ -10,7 +10,7 @@ type RawDecoder struct {
 	audioExt string
 }
 
-func NewRawDecoder(file []byte) Decoder {
+func NewRawDecoder(file []byte) DecoderInterface {
 	return &RawDecoder{file: file}
 }
 
@@ -40,7 +40,7 @@ func (d RawDecoder) GetAudioExt() string {
 	return d.audioExt
 }
 
-func (d RawDecoder) GetMeta() Meta {
+func (d RawDecoder) GetMeta() MetaInterface {
 	return nil
 }
 

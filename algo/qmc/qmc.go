@@ -217,7 +217,7 @@ type compactDecoder struct {
 	buf       *bytes.Buffer
 }
 
-func newCompactDecoder(p []byte) common.Decoder {
+func newCompactDecoder(p []byte) common.DecoderInterface {
 	r := bytes.NewReader(p)
 	d, err := NewDecoder(r)
 	c := compactDecoder{
@@ -258,6 +258,6 @@ func (c *compactDecoder) GetAudioExt() string {
 	return c.decoder.GetFileExt()
 }
 
-func (c *compactDecoder) GetMeta() common.Meta {
+func (c *compactDecoder) GetMeta() common.MetaInterface {
 	return nil
 }

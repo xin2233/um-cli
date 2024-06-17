@@ -26,10 +26,15 @@ var AppVersion = "v0.0.6"
 
 func main() {
 	app := cli.App{
-		Name:     "Unlock Music CLI",
-		HelpName: "um",
-		Usage:    "Unlock your encrypted music file https://github.com/unlock-music/cli",
-		Version:  fmt.Sprintf("%s (%s,%s/%s)", AppVersion, runtime.Version(), runtime.GOOS, runtime.GOARCH),
+		Name:        "Unlock Music CLI",
+		HelpName:    "um",
+		Description: "This is how we describe greet the app",
+		Authors: []*cli.Author{
+			{Name: "Harrison", Email: "harrison@lolwut.com"},
+			{Name: "Oliver Allen", Email: "oliver@toyshop.com"},
+		},
+		Usage:   "Unlock your encrypted music file https://github.com/unlock-music/cli",
+		Version: fmt.Sprintf("%s (%s,%s/%s)", AppVersion, runtime.Version(), runtime.GOOS, runtime.GOARCH),
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "input", Aliases: []string{"i"}, Usage: "path to input file or dir", Required: false},
 			&cli.StringFlag{Name: "output", Aliases: []string{"o"}, Usage: "path to output dir", Required: false},
@@ -38,7 +43,7 @@ func main() {
 		},
 
 		Action:          appMain,
-		Copyright:       "Copyright (c) 2020 - 2021 Unlock Music https://github.com/unlock-music/cli/blob/master/LICENSE",
+		Copyright:       "Copyright (c) 2020 - 2024 origin:Unlock Music https://github.com/unlock-music/cli/blob/master/LICENSE",
 		HideHelpCommand: true,
 		UsageText:       "um [-o /path/to/output/dir] [--extra-flags] [-i] /path/to/input",
 	}
@@ -47,6 +52,7 @@ func main() {
 		logging.Log().Fatal("run app failed", zap.Error(err))
 	}
 }
+
 func printSupportedExtensions() {
 	exts := []string{}
 	for ext := range common.DecoderRegistry {
@@ -57,27 +63,28 @@ func printSupportedExtensions() {
 		fmt.Printf("%s: %d\n", ext, len(common.DecoderRegistry[ext]))
 	}
 }
-func appMain(c *cli.Context) (err error) {
-	if c.Bool("supported-ext") {
+
+func appMain(ccli *cli.Context) (err error) {
+	if ccli.Bool("supported-ext") {
 		printSupportedExtensions()
 		return nil
 	}
-	input := c.String("input")
+	input := ccli.String("input")
 	if input == "" {
-		switch c.Args().Len() {
+		switch ccli.Args().Len() {
 		case 0:
 			input, err = os.Getwd()
 			if err != nil {
 				return err
 			}
 		case 1:
-			input = c.Args().Get(0)
+			input = ccli.Args().Get(0)
 		default:
 			return errors.New("please specify input file (or directory)")
 		}
 	}
 
-	output := c.String("output")
+	output := ccli.String("output")
 	if output == "" {
 		var err error
 		output, err = os.Getwd()
@@ -89,7 +96,7 @@ func appMain(c *cli.Context) (err error) {
 		}
 	}
 
-	skipNoop := c.Bool("skip-noop")
+	skipNoop := ccli.Bool("skip-noop")
 
 	inputStat, err := os.Stat(input)
 	if err != nil {
@@ -109,8 +116,10 @@ func appMain(c *cli.Context) (err error) {
 	}
 
 	if inputStat.IsDir() {
+		// 输入的input 是个dir，则对dir进行解析
 		return dealDirectory(input, output, skipNoop)
 	} else {
+		// input 不是dir，则当成文件进行解析
 		allDec := common.GetDecoder(inputStat.Name(), skipNoop)
 		if len(allDec) == 0 {
 			logging.Log().Fatal("skipping while no suitable decoder")
@@ -119,6 +128,7 @@ func appMain(c *cli.Context) (err error) {
 	}
 
 }
+
 func dealDirectory(inputDir string, outputDir string, skipNoop bool) error {
 	items, err := os.ReadDir(inputDir)
 	if err != nil {
@@ -128,6 +138,7 @@ func dealDirectory(inputDir string, outputDir string, skipNoop bool) error {
 		if item.IsDir() {
 			continue
 		}
+		// 获取全部的 decoder
 		allDec := common.GetDecoder(item.Name(), skipNoop)
 		if len(allDec) == 0 {
 			logging.Log().Info("skipping while no suitable decoder", zap.String("file", item.Name()))
@@ -142,13 +153,14 @@ func dealDirectory(inputDir string, outputDir string, skipNoop bool) error {
 	return nil
 }
 
+// 尝试解密文件
 func tryDecFile(inputFile string, outputDir string, allDec []common.NewDecoderFunc) error {
 	file, err := os.ReadFile(inputFile)
 	if err != nil {
 		return err
 	}
 
-	var dec common.Decoder
+	var dec common.DecoderInterface
 	for _, decFunc := range allDec {
 		dec = decFunc(file)
 		if err := dec.Validate(); err == nil {

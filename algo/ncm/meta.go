@@ -6,7 +6,7 @@ import (
 )
 
 type RawMeta interface {
-	common.Meta
+	common.MetaInterface
 	GetFormat() string
 	GetAlbumImageURL() string
 }
