@@ -1,3 +1,5 @@
+// 网易云
+
 package ncm
 
 import (
@@ -6,13 +8,14 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/unlock-music/cli/algo/common"
 	"github.com/unlock-music/cli/internal/logging"
 	"github.com/unlock-music/cli/internal/utils"
 	"go.uber.org/zap"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 var (
@@ -53,6 +56,9 @@ type Decoder struct {
 	offsetAudio uint32
 }
 
+// Validate 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) Validate() error {
 	if !bytes.Equal(magicHeader, d.file[:len(magicHeader)]) {
 		return errors.New("ncm magic header not match")
@@ -61,6 +67,9 @@ func (d *Decoder) Validate() error {
 	return nil
 }
 
+// readKeyData 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) readKeyData() error {
 	if d.offsetKey == 0 || d.offsetKey+4 > d.fileLen {
 		return errors.New("invalid cover file offset")
@@ -78,6 +87,9 @@ func (d *Decoder) readKeyData() error {
 	return nil
 }
 
+// readMetaData 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) readMetaData() error {
 	if d.offsetMeta == 0 || d.offsetMeta+4 > d.fileLen {
 		return errors.New("invalid meta file offset")
@@ -110,6 +122,8 @@ func (d *Decoder) readMetaData() error {
 	return nil
 }
 
+// buildKeyBox 
+//  @receiver d 
 func (d *Decoder) buildKeyBox() {
 	box := make([]byte, 256)
 	for i := 0; i < 256; i++ {
@@ -133,6 +147,9 @@ func (d *Decoder) buildKeyBox() {
 	}
 }
 
+// parseMeta 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) parseMeta() error {
 	switch d.metaType {
 	case "music":
@@ -146,6 +163,9 @@ func (d *Decoder) parseMeta() error {
 	}
 }
 
+// readCoverData 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) readCoverData() error {
 	if d.offsetCover == 0 || d.offsetCover+13 > d.fileLen {
 		return errors.New("invalid cover file offset")
@@ -163,6 +183,9 @@ func (d *Decoder) readCoverData() error {
 	return nil
 }
 
+// readAudioData 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) readAudioData() error {
 	if d.offsetAudio == 0 || d.offsetAudio > d.fileLen {
 		return errors.New("invalid audio offset")
@@ -176,6 +199,9 @@ func (d *Decoder) readAudioData() error {
 	return nil
 }
 
+// Decode 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) Decode() error {
 	if err := d.readKeyData(); err != nil {
 		return err
@@ -198,6 +224,9 @@ func (d *Decoder) Decode() error {
 	return d.readAudioData()
 }
 
+// GetAudioExt 
+//  @receiver d 
+//  @return string 
 func (d Decoder) GetAudioExt() string {
 	if d.meta != nil {
 		if format := d.meta.GetFormat(); format != "" {
@@ -207,10 +236,16 @@ func (d Decoder) GetAudioExt() string {
 	return ""
 }
 
+// GetAudioData 
+//  @receiver d 
+//  @return []byte 
 func (d Decoder) GetAudioData() []byte {
 	return d.audio
 }
 
+// GetCoverImage 
+//  @receiver d 
+//  @return []byte 
 func (d Decoder) GetCoverImage() []byte {
 	if d.cover != nil {
 		return d.cover
@@ -240,10 +275,14 @@ func (d Decoder) GetCoverImage() []byte {
 	}
 }
 
+// GetMeta 
+//  @receiver d 
+//  @return common.MetaInterface 
 func (d Decoder) GetMeta() common.MetaInterface {
 	return d.meta
 }
 
+// init 
 func init() {
 	// Netease Mp3/Flac
 	common.RegisterDecoder("ncm", false, NewDecoder)

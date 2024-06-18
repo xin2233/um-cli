@@ -16,14 +16,23 @@ type Decoder struct {
 	audioExt    string
 }
 
+// GetCoverImage 
+//  @receiver d 
+//  @return []byte 
 func (d *Decoder) GetCoverImage() []byte {
 	return nil
 }
 
+// GetAudioData 
+//  @receiver d 
+//  @return []byte 
 func (d *Decoder) GetAudioData() []byte {
 	return d.audio
 }
 
+// GetAudioExt 
+//  @receiver d 
+//  @return string 
 func (d *Decoder) GetAudioExt() string {
 	if d.audioExt != "" {
 		return "." + d.audioExt
@@ -31,10 +40,16 @@ func (d *Decoder) GetAudioExt() string {
 	return ""
 }
 
+// GetMeta 
+//  @receiver d 
+//  @return common.MetaInterface 
 func (d *Decoder) GetMeta() common.MetaInterface {
 	return nil
 }
 
+// Validate 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) Validate() error {
 	if len(d.file) < 8 {
 		return errors.New("invalid file size")
@@ -46,6 +61,9 @@ func (d *Decoder) Validate() error {
 	return nil
 }
 
+// Decode 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) Decode() error {
 	d.audio = d.file
 	if d.headerMatch {
@@ -57,11 +75,16 @@ func (d *Decoder) Decode() error {
 	return nil
 }
 
-//goland:noinspection GoUnusedExportedFunction
+// NewDecoder goland:noinspection GoUnusedExportedFunction
+//  @param data 
+//  @return common.DecoderInterface 
 func NewDecoder(data []byte) common.DecoderInterface {
 	return &Decoder{file: data}
 }
 
+// DecoderFuncWithExt 
+//  @param ext 
+//  @return common.NewDecoderFunc 
 func DecoderFuncWithExt(ext string) common.NewDecoderFunc {
 	return func(file []byte) common.DecoderInterface {
 		return &Decoder{file: file, audioExt: ext}

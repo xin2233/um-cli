@@ -1,6 +1,6 @@
 package common
 
-// 这是个接口
+// DecoderInterface 
 type DecoderInterface interface {
 	Validate() error // 方法声明
 	Decode() error
@@ -10,6 +10,7 @@ type DecoderInterface interface {
 	GetMeta() MetaInterface
 }
 
+// MetaInterface 
 type MetaInterface interface {
 	GetArtists() []string
 	GetTitle() string

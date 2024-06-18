@@ -15,6 +15,10 @@ var snifferRegistry = map[string]Sniffer{
 	".dff":  SnifferDFF,
 }
 
+// SniffAll 
+//  @param header 
+//  @return string 
+//  @return bool 
 func SniffAll(header []byte) (string, bool) {
 	for ext, sniffer := range snifferRegistry {
 		if sniffer(header) {
@@ -24,26 +28,51 @@ func SniffAll(header []byte) (string, bool) {
 	return "", false
 }
 
+// SnifferM4A 
+//  @param header 
+//  @return bool 
 func SnifferM4A(header []byte) bool {
 	return len(header) >= 8 && bytes.Equal([]byte("ftyp"), header[4:8])
 }
 
+// SnifferOGG 
+//  @param header 
+//  @return bool 
 func SnifferOGG(header []byte) bool {
 	return bytes.HasPrefix(header, []byte("OggS"))
 }
 
+// SnifferFLAC 
+//  @param header 
+//  @return bool 
 func SnifferFLAC(header []byte) bool {
 	return bytes.HasPrefix(header, []byte("fLaC"))
 }
+
+// SnifferMP3 
+//  @param header 
+//  @return bool 
 func SnifferMP3(header []byte) bool {
 	return bytes.HasPrefix(header, []byte("ID3"))
 }
+
+// SnifferWAV 
+//  @param header 
+//  @return bool 
 func SnifferWAV(header []byte) bool {
 	return bytes.HasPrefix(header, []byte("RIFF"))
 }
+
+// SnifferWMA 
+//  @param header 
+//  @return bool 
 func SnifferWMA(header []byte) bool {
 	return bytes.HasPrefix(header, []byte("\x30\x26\xb2\x75\x8e\x66\xcf\x11\xa6\xd9\x00\xaa\x00\x62\xce\x6c"))
 }
+
+// SnifferAAC 
+//  @param header 
+//  @return bool 
 func SnifferAAC(header []byte) bool {
 	return bytes.HasPrefix(header, []byte{0xFF, 0xF1})
 }

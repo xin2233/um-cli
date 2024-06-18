@@ -93,6 +93,9 @@ func (m RawMetaDJ) GetTitle() string {
 	return m.MainMusic.GetTitle()
 }
 
+// GetAlbum 
+//  @receiver m 
+//  @return string 
 func (m RawMetaDJ) GetAlbum() string {
 	if m.Brand != "" {
 		return m.Brand
@@ -100,10 +103,16 @@ func (m RawMetaDJ) GetAlbum() string {
 	return m.MainMusic.GetAlbum()
 }
 
+// GetFormat 
+//  @receiver m 
+//  @return string 
 func (m RawMetaDJ) GetFormat() string {
 	return m.MainMusic.GetFormat()
 }
 
+// GetAlbumImageURL 
+//  @receiver m 
+//  @return string 
 func (m RawMetaDJ) GetAlbumImageURL() string {
 	if strings.HasPrefix(m.MainMusic.GetAlbumImageURL(), "http") {
 		return m.MainMusic.GetAlbumImageURL()

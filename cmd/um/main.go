@@ -24,6 +24,7 @@ import (
 
 var AppVersion = "v0.0.6"
 
+// main 
 func main() {
 	app := cli.App{
 		Name:        "Unlock Music CLI",
@@ -53,6 +54,7 @@ func main() {
 	}
 }
 
+// printSupportedExtensions 
 func printSupportedExtensions() {
 	exts := []string{}
 	for ext := range common.DecoderRegistry {
@@ -64,6 +66,9 @@ func printSupportedExtensions() {
 	}
 }
 
+// appMain 
+//  @param ccli 
+//  @return err 
 func appMain(ccli *cli.Context) (err error) {
 	if ccli.Bool("supported-ext") {
 		printSupportedExtensions()
@@ -126,9 +131,13 @@ func appMain(ccli *cli.Context) (err error) {
 		}
 		return tryDecFile(input, output, allDec)
 	}
-
 }
 
+// dealDirectory 
+//  @param inputDir 
+//  @param outputDir 
+//  @param skipNoop 
+//  @return error 
 func dealDirectory(inputDir string, outputDir string, skipNoop bool) error {
 	items, err := os.ReadDir(inputDir)
 	if err != nil {
@@ -153,7 +162,11 @@ func dealDirectory(inputDir string, outputDir string, skipNoop bool) error {
 	return nil
 }
 
-// 尝试解密文件
+// tryDecFile 尝试解密文件
+//  @param inputFile 
+//  @param outputDir 
+//  @param allDec 
+//  @return error 
 func tryDecFile(inputFile string, outputDir string, allDec []common.NewDecoderFunc) error {
 	file, err := os.ReadFile(inputFile)
 	if err != nil {

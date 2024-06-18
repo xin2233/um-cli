@@ -29,14 +29,23 @@ type Decoder struct {
 	audio     []byte
 }
 
+// GetCoverImage 
+//  @receiver d 
+//  @return []byte 
 func (d *Decoder) GetCoverImage() []byte {
 	return nil
 }
 
+// GetAudioData 
+//  @receiver d 
+//  @return []byte 
 func (d *Decoder) GetAudioData() []byte {
 	return d.audio
 }
 
+// GetAudioExt 
+//  @receiver d 
+//  @return string 
 func (d *Decoder) GetAudioExt() string {
 	if d.outputExt != "" {
 		return "." + d.outputExt
@@ -45,14 +54,23 @@ func (d *Decoder) GetAudioExt() string {
 	return ""
 }
 
+// GetMeta 
+//  @receiver d 
+//  @return common.MetaInterface 
 func (d *Decoder) GetMeta() common.MetaInterface {
 	return nil
 }
 
+// NewDecoder 
+//  @param data 
+//  @return common.DecoderInterface 
 func NewDecoder(data []byte) common.DecoderInterface {
 	return &Decoder{file: data}
 }
 
+// Validate 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) Validate() error {
 	lenData := len(d.file)
 	if lenData < 16 {
@@ -79,6 +97,9 @@ func (d *Decoder) Validate() error {
 	return nil
 }
 
+// Decode 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) Decode() error {
 	d.mask = d.file[15]
 	d.audio = d.file[16:]
@@ -89,12 +110,16 @@ func (d *Decoder) Decode() error {
 	return nil
 }
 
+// DecoderFuncWithExt 
+//  @param ext 
+//  @return common.NewDecoderFunc 
 func DecoderFuncWithExt(ext string) common.NewDecoderFunc {
 	return func(file []byte) common.DecoderInterface {
 		return &Decoder{file: file, outputExt: ext}
 	}
 }
 
+// init 
 func init() {
 	// Xiami Wav/M4a/Mp3/Flac
 	common.RegisterDecoder("xm", false, NewDecoder)

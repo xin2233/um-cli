@@ -29,6 +29,7 @@ func newDefaultProductionLog() *zap.Logger {
 }
 
 // Log returns the current default logger.
+//  @return *zap.Logger 
 func Log() *zap.Logger {
 	defaultLoggerMu.RLock()
 	defer defaultLoggerMu.RUnlock()

@@ -26,6 +26,10 @@ type Decoder struct {
 
 // Read implements io.Reader, offer the decrypted audio data.
 // Validate should call before Read to check if the file is valid.
+//  @receiver d 
+//  @param p 
+//  @return int 
+//  @return error 
 func (d *Decoder) Read(p []byte) (int, error) {
 	n := len(p)
 	if d.audioLen-d.offset <= 0 {
@@ -43,6 +47,10 @@ func (d *Decoder) Read(p []byte) (int, error) {
 	return m, err
 }
 
+// NewDecoder 
+//  @param r 
+//  @return *Decoder 
+//  @return error 
 func NewDecoder(r io.ReadSeeker) (*Decoder, error) {
 	d := &Decoder{r: r}
 	err := d.searchKey()
@@ -72,6 +80,9 @@ func NewDecoder(r io.ReadSeeker) (*Decoder, error) {
 	return d, nil
 }
 
+// Validate 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) Validate() error {
 	buf := make([]byte, 16)
 	if _, err := io.ReadFull(d.r, buf); err != nil {
@@ -91,10 +102,16 @@ func (d *Decoder) Validate() error {
 	return nil
 }
 
+// GetFileExt 
+//  @receiver d 
+//  @return string 
 func (d Decoder) GetFileExt() string {
 	return d.fileExt
 }
 
+// searchKey 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) searchKey() error {
 	fileSizeM4, err := d.r.Seek(-4, io.SeekEnd)
 	if err != nil {
@@ -121,6 +138,10 @@ func (d *Decoder) searchKey() error {
 	return nil
 }
 
+// readRawKey 
+//  @receiver d 
+//  @param rawKeyLen 
+//  @return error 
 func (d *Decoder) readRawKey(rawKeyLen int64) error {
 	audioLen, err := d.r.Seek(-(4 + rawKeyLen), io.SeekEnd)
 	if err != nil {
@@ -141,6 +162,9 @@ func (d *Decoder) readRawKey(rawKeyLen int64) error {
 	return nil
 }
 
+// readRawMetaQTag 
+//  @receiver d 
+//  @return error 
 func (d *Decoder) readRawMetaQTag() error {
 	// get raw meta data len
 	if _, err := d.r.Seek(-8, io.SeekEnd); err != nil {
@@ -217,6 +241,9 @@ type compactDecoder struct {
 	buf       *bytes.Buffer
 }
 
+// newCompactDecoder 
+//  @param p 
+//  @return common.DecoderInterface 
 func newCompactDecoder(p []byte) common.DecoderInterface {
 	r := bytes.NewReader(p)
 	d, err := NewDecoder(r)
@@ -227,6 +254,9 @@ func newCompactDecoder(p []byte) common.DecoderInterface {
 	return &c
 }
 
+// Validate 
+//  @receiver c 
+//  @return error 
 func (c *compactDecoder) Validate() error {
 	if c.createErr != nil {
 		return c.createErr
@@ -234,6 +264,9 @@ func (c *compactDecoder) Validate() error {
 	return c.decoder.Validate()
 }
 
+// Decode 
+//  @receiver c 
+//  @return error 
 func (c *compactDecoder) Decode() error {
 	if c.createErr != nil {
 		return c.createErr
@@ -243,14 +276,23 @@ func (c *compactDecoder) Decode() error {
 	return err
 }
 
+// GetCoverImage 
+//  @receiver c 
+//  @return []byte 
 func (c *compactDecoder) GetCoverImage() []byte {
 	return nil
 }
 
+// GetAudioData 
+//  @receiver c 
+//  @return []byte 
 func (c *compactDecoder) GetAudioData() []byte {
 	return c.buf.Bytes()
 }
 
+// GetAudioExt 
+//  @receiver c 
+//  @return string 
 func (c *compactDecoder) GetAudioExt() string {
 	if c.createErr != nil {
 		return ""
@@ -258,6 +300,9 @@ func (c *compactDecoder) GetAudioExt() string {
 	return c.decoder.GetFileExt()
 }
 
+// GetMeta 
+//  @receiver c 
+//  @return common.MetaInterface 
 func (c *compactDecoder) GetMeta() common.MetaInterface {
 	return nil
 }
