@@ -20,7 +20,7 @@
 ~~1. Clone this repo `git clone https://github.com/unlock-music/cli && cd cli`~~
 1. Clone this repo `git clone https://github.com/xin2233/um-cli.git `
 2. Build the executable `go build ./cmd/um`
-3. if you meet some problem, please refer to [this complie](./docs/compile)
+3. if you meet some problem, please refer to [this complie](./docs/compile.md)
 
 
 ## How to use

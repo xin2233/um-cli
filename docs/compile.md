@@ -1,0 +1,13 @@
+In china, need do this:
+
+- input the following command:
+```
+go env -w GO111MODULE=on
+go env -w GOPROXY=https://goproxy.cn,direct
+```
+
+- then,
+`go env`
+
+- and check again
+` go build ./cmd/um`
