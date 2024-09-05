@@ -26,7 +26,7 @@ type Decoder struct {
 	audio []byte
 }
 
-// NewDecoder
+// NewDecoder 函数返回一个 实现了 common.DecoderInterface 接口的 Decoder 结构体指针，也就是对象
 //  @param file
 //  @return common.DecoderInterface
 func NewDecoder(file []byte) common.DecoderInterface {

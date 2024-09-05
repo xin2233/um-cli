@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// 定义回调函数接口
 type NewDecoderFunc func([]byte) DecoderInterface
 
 type decoderItem struct {
@@ -14,10 +15,10 @@ type decoderItem struct {
 
 var DecoderRegistry = make(map[string][]decoderItem)
 
-// RegisterDecoder 注册decoder
-//  @param ext 
-//  @param noop 
-//  @param dispatchFunc 
+// RegisterDecoder 注册decoder 回调函数
+//  @param ext
+//  @param noop
+//  @param dispatchFunc
 func RegisterDecoder(ext string, noop bool, dispatchFunc NewDecoderFunc) {
 	DecoderRegistry[ext] = append(DecoderRegistry[ext],
 		decoderItem{noop: noop, decoder: dispatchFunc})
@@ -26,7 +27,7 @@ func RegisterDecoder(ext string, noop bool, dispatchFunc NewDecoderFunc) {
 // GetDecoder 实现了从给定文件名中提取文件扩展名，并根据该扩展名以及是否跳过空操作（noop）的条件，
 // 从解码器注册表（DecoderRegistry）中选择相应的解码器函数。函数的返回值是一个 NewDecoderFunc 类型的切片，其中包含了满足条件的解码器函数
 // noop : No Operation
-//  @param filename 
+//  @param filename
 //  @param skipNoop 可能是一个布尔（boolean）类型的参数，用于指示是否跳过 noop 操作。如果 skipNoop 为 true，则在执行某些操作时，会忽略或跳过那些标记为 noop 的函数或方法
 //  @return rs NewDecoderFunc
 func GetDecoder(filename string, skipNoop bool) (rs []NewDecoderFunc) {
