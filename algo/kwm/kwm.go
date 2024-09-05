@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"github.com/unlock-music/cli/algo/common"
+	"github.com/xin2233/um-cli/algo/common"
 	"strconv"
 	"strings"
 	"unicode"
@@ -31,45 +31,45 @@ type Decoder struct {
 	audio []byte
 }
 
-// GetCoverImage 
-//  @receiver d 
-//  @return []byte 
+// GetCoverImage
+//  @receiver d
+//  @return []byte
 func (d *Decoder) GetCoverImage() []byte {
 	return nil
 }
 
-// GetAudioData 
-//  @receiver d 
-//  @return []byte 
+// GetAudioData
+//  @receiver d
+//  @return []byte
 func (d *Decoder) GetAudioData() []byte {
 	return d.audio
 }
 
-// GetAudioExt 
-//  @receiver d 
-//  @return string 
+// GetAudioExt
+//  @receiver d
+//  @return string
 func (d *Decoder) GetAudioExt() string {
 	return "." + d.outputExt
 }
 
-// GetMeta 
-//  @receiver d 
-//  @return common.MetaInterface 
+// GetMeta
+//  @receiver d
+//  @return common.MetaInterface
 func (d *Decoder) GetMeta() common.MetaInterface {
 	return nil
 }
 
-// NewDecoder 
-//  @param data 
-//  @return common.DecoderInterface 
+// NewDecoder
+//  @param data
+//  @return common.DecoderInterface
 func NewDecoder(data []byte) common.DecoderInterface {
 	//todo: Notice the input data will be changed for now
 	return &Decoder{file: data}
 }
 
-// Validate 
-//  @receiver d 
-//  @return error 
+// Validate
+//  @receiver d
+//  @return error
 func (d *Decoder) Validate() error {
 	lenData := len(d.file)
 	if lenData < 1024 {
@@ -82,9 +82,9 @@ func (d *Decoder) Validate() error {
 	return nil
 }
 
-// generateMask 
-//  @param key 
-//  @return []byte 
+// generateMask
+//  @param key
+//  @return []byte
 func generateMask(key []byte) []byte {
 	keyInt := binary.LittleEndian.Uint64(key)
 	keyStr := strconv.FormatUint(keyInt, 10)
@@ -96,8 +96,8 @@ func generateMask(key []byte) []byte {
 	return mask
 }
 
-// parseBitrateAndType 
-//  @receiver d 
+// parseBitrateAndType
+//  @receiver d
 func (d *Decoder) parseBitrateAndType() {
 	bitType := string(bytes.TrimRight(d.file[0x30:0x38], string(byte(0))))
 	charPos := 0
@@ -115,9 +115,9 @@ func (d *Decoder) parseBitrateAndType() {
 
 }
 
-// Decode 
-//  @receiver d 
-//  @return error 
+// Decode
+//  @receiver d
+//  @return error
 func (d *Decoder) Decode() error {
 	d.parseBitrateAndType()
 
@@ -131,10 +131,10 @@ func (d *Decoder) Decode() error {
 	return nil
 }
 
-// padOrTruncate 
-//  @param raw 
-//  @param length 
-//  @return string 
+// padOrTruncate
+//  @param raw
+//  @param length
+//  @return string
 func padOrTruncate(raw string, length int) string {
 	lenRaw := len(raw)
 	out := raw
@@ -152,7 +152,7 @@ func padOrTruncate(raw string, length int) string {
 	return out
 }
 
-// init 
+// init
 func init() {
 	// Kuwo Mp3/Flac
 	common.RegisterDecoder("kwm", false, NewDecoder)

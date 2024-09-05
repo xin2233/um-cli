@@ -1,4 +1,4 @@
-module github.com/unlock-music/cli
+module github.com/xin2233/um-cli
 
 go 1.17
 

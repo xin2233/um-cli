@@ -12,19 +12,19 @@ import (
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap"
 
-	"github.com/unlock-music/cli/algo/common"
-	_ "github.com/unlock-music/cli/algo/kgm"
-	_ "github.com/unlock-music/cli/algo/kwm"
-	_ "github.com/unlock-music/cli/algo/ncm"
-	_ "github.com/unlock-music/cli/algo/qmc"
-	_ "github.com/unlock-music/cli/algo/tm"
-	_ "github.com/unlock-music/cli/algo/xm"
-	"github.com/unlock-music/cli/internal/logging"
+	"github.com/xin2233/um-cli/algo/common"
+	_ "github.com/xin2233/um-cli/algo/kgm"
+	_ "github.com/xin2233/um-cli/algo/kwm"
+	_ "github.com/xin2233/um-cli/algo/ncm"
+	_ "github.com/xin2233/um-cli/algo/qmc"
+	_ "github.com/xin2233/um-cli/algo/tm"
+	_ "github.com/xin2233/um-cli/algo/xm"
+	"github.com/xin2233/um-cli/internal/logging"
 )
 
 var AppVersion = "v0.0.6"
 
-// main 
+// main
 func main() {
 	app := cli.App{
 		Name:        "Unlock Music CLI",
@@ -34,7 +34,7 @@ func main() {
 			{Name: "Harrison", Email: "harrison@lolwut.com"},
 			{Name: "Oliver Allen", Email: "oliver@toyshop.com"},
 		},
-		Usage:   "Unlock your encrypted music file https://github.com/unlock-music/cli",
+		Usage:   "Unlock your encrypted music file https://github.com/xin2233/um-cli",
 		Version: fmt.Sprintf("%s (%s,%s/%s)", AppVersion, runtime.Version(), runtime.GOOS, runtime.GOARCH),
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "input", Aliases: []string{"i"}, Usage: "path to input file or dir", Required: false},
@@ -44,7 +44,7 @@ func main() {
 		},
 
 		Action:          appMain,
-		Copyright:       "Copyright (c) 2020 - 2024 origin:Unlock Music https://github.com/unlock-music/cli/blob/master/LICENSE",
+		Copyright:       "Copyright (c) 2020 - 2024 origin:Unlock Music https://github.com/xin2233/um-cli/blob/master/LICENSE",
 		HideHelpCommand: true,
 		UsageText:       "um [-o /path/to/output/dir] [--extra-flags] [-i] /path/to/input",
 	}
@@ -54,7 +54,7 @@ func main() {
 	}
 }
 
-// printSupportedExtensions 
+// printSupportedExtensions
 func printSupportedExtensions() {
 	exts := []string{}
 	for ext := range common.DecoderRegistry {
@@ -66,9 +66,9 @@ func printSupportedExtensions() {
 	}
 }
 
-// appMain 
-//  @param ccli 
-//  @return err 
+// appMain
+//  @param ccli
+//  @return err
 func appMain(ccli *cli.Context) (err error) {
 	if ccli.Bool("supported-ext") {
 		printSupportedExtensions()
@@ -133,11 +133,11 @@ func appMain(ccli *cli.Context) (err error) {
 	}
 }
 
-// dealDirectory 
-//  @param inputDir 
-//  @param outputDir 
-//  @param skipNoop 
-//  @return error 
+// dealDirectory
+//  @param inputDir
+//  @param outputDir
+//  @param skipNoop
+//  @return error
 func dealDirectory(inputDir string, outputDir string, skipNoop bool) error {
 	items, err := os.ReadDir(inputDir)
 	if err != nil {
@@ -163,10 +163,10 @@ func dealDirectory(inputDir string, outputDir string, skipNoop bool) error {
 }
 
 // tryDecFile 尝试解密文件
-//  @param inputFile 
-//  @param outputDir 
-//  @param allDec 
-//  @return error 
+//  @param inputFile
+//  @param outputDir
+//  @param allDec
+//  @return error
 func tryDecFile(inputFile string, outputDir string, allDec []common.NewDecoderFunc) error {
 	file, err := os.ReadFile(inputFile)
 	if err != nil {

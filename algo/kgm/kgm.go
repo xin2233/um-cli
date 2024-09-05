@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"github.com/unlock-music/cli/algo/common"
-	"github.com/unlock-music/cli/internal/logging"
+	"github.com/xin2233/um-cli/algo/common"
+	"github.com/xin2233/um-cli/internal/logging"
 )
 
 var (
@@ -18,7 +18,7 @@ var (
 	ErrKgmMagicHeader = errors.New("kgm/vpr magic header not matched")
 )
 
-// Decoder 
+// Decoder
 type Decoder struct {
 	file  []byte
 	key   []byte
@@ -26,46 +26,46 @@ type Decoder struct {
 	audio []byte
 }
 
-// NewDecoder 
-//  @param file 
-//  @return common.DecoderInterface 
+// NewDecoder
+//  @param file
+//  @return common.DecoderInterface
 func NewDecoder(file []byte) common.DecoderInterface {
 	return &Decoder{
 		file: file,
 	}
 }
 
-// GetCoverImage 
-//  @receiver d 
-//  @return []byte 
+// GetCoverImage
+//  @receiver d
+//  @return []byte
 func (d Decoder) GetCoverImage() []byte {
 	return nil
 }
 
-// GetAudioData 
-//  @receiver d 
-//  @return []byte 
+// GetAudioData
+//  @receiver d
+//  @return []byte
 func (d Decoder) GetAudioData() []byte {
 	return d.audio
 }
 
-// GetAudioExt 
-//  @receiver d 
-//  @return string 
+// GetAudioExt
+//  @receiver d
+//  @return string
 func (d Decoder) GetAudioExt() string {
 	return "" // use sniffer
 }
 
-// GetMeta 
-//  @receiver d 
-//  @return common.MetaInterface 
+// GetMeta
+//  @receiver d
+//  @return common.MetaInterface
 func (d Decoder) GetMeta() common.MetaInterface {
 	return nil
 }
 
-// Validate 
-//  @receiver d 
-//  @return error 
+// Validate
+//  @receiver d
+//  @return error
 func (d *Decoder) Validate() error {
 	if bytes.Equal(kgmHeader, d.file[:len(kgmHeader)]) {
 		d.isVpr = false
@@ -81,9 +81,9 @@ func (d *Decoder) Validate() error {
 	return nil
 }
 
-// Decode 
-//  @receiver d 
-//  @return error 
+// Decode
+//  @receiver d
+//  @return error
 func (d *Decoder) Decode() error {
 	headerLen := binary.LittleEndian.Uint32(d.file[0x10:0x14])
 	dataEncrypted := d.file[headerLen:]
@@ -91,7 +91,7 @@ func (d *Decoder) Decode() error {
 	initMask()
 	if fullMaskLen < lenData {
 		logging.Log().Warn("The file is too large and the processed audio is incomplete, " +
-			"please report to us about this file at https://github.com/unlock-music/cli/issues")
+			"please report to us about this file at https://github.com/xin2233/um-cli/issues")
 		lenData = fullMaskLen
 	}
 	d.audio = make([]byte, lenData)

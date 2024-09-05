@@ -3,7 +3,7 @@ package tm
 import (
 	"bytes"
 	"errors"
-	"github.com/unlock-music/cli/algo/common"
+	"github.com/xin2233/um-cli/algo/common"
 )
 
 var replaceHeader = []byte{0x00, 0x00, 0x00, 0x20, 0x66, 0x74, 0x79, 0x70}
@@ -16,23 +16,23 @@ type Decoder struct {
 	audioExt    string
 }
 
-// GetCoverImage 
-//  @receiver d 
-//  @return []byte 
+// GetCoverImage
+//  @receiver d
+//  @return []byte
 func (d *Decoder) GetCoverImage() []byte {
 	return nil
 }
 
-// GetAudioData 
-//  @receiver d 
-//  @return []byte 
+// GetAudioData
+//  @receiver d
+//  @return []byte
 func (d *Decoder) GetAudioData() []byte {
 	return d.audio
 }
 
-// GetAudioExt 
-//  @receiver d 
-//  @return string 
+// GetAudioExt
+//  @receiver d
+//  @return string
 func (d *Decoder) GetAudioExt() string {
 	if d.audioExt != "" {
 		return "." + d.audioExt
@@ -40,16 +40,16 @@ func (d *Decoder) GetAudioExt() string {
 	return ""
 }
 
-// GetMeta 
-//  @receiver d 
-//  @return common.MetaInterface 
+// GetMeta
+//  @receiver d
+//  @return common.MetaInterface
 func (d *Decoder) GetMeta() common.MetaInterface {
 	return nil
 }
 
-// Validate 
-//  @receiver d 
-//  @return error 
+// Validate
+//  @receiver d
+//  @return error
 func (d *Decoder) Validate() error {
 	if len(d.file) < 8 {
 		return errors.New("invalid file size")
@@ -61,9 +61,9 @@ func (d *Decoder) Validate() error {
 	return nil
 }
 
-// Decode 
-//  @receiver d 
-//  @return error 
+// Decode
+//  @receiver d
+//  @return error
 func (d *Decoder) Decode() error {
 	d.audio = d.file
 	if d.headerMatch {
@@ -76,15 +76,15 @@ func (d *Decoder) Decode() error {
 }
 
 // NewDecoder goland:noinspection GoUnusedExportedFunction
-//  @param data 
-//  @return common.DecoderInterface 
+//  @param data
+//  @return common.DecoderInterface
 func NewDecoder(data []byte) common.DecoderInterface {
 	return &Decoder{file: data}
 }
 
-// DecoderFuncWithExt 
-//  @param ext 
-//  @return common.NewDecoderFunc 
+// DecoderFuncWithExt
+//  @param ext
+//  @return common.NewDecoderFunc
 func DecoderFuncWithExt(ext string) common.NewDecoderFunc {
 	return func(file []byte) common.DecoderInterface {
 		return &Decoder{file: file, audioExt: ext}
